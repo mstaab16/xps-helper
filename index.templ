@@ -1,0 +1,100 @@
+package main
+
+import "fmt"
+import "net/http"
+import "strconv"
+
+templ index(tablecomponent templ.Component, r *http.Request) {
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Electron Binding Energies</title>
+		<script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+		<style>
+			table {
+				border-collapse: collapse;
+				width: 100%;
+			}
+			th, td {
+				border: 1px solid black;
+				padding: 8px;
+				text-align: left;
+			}
+			tr:nth-child(even) {
+				background-color: #f2f2f2;
+			}
+		</style>
+	</head>
+	<form
+		hx-boost="true"
+		action="/"
+		method="get"
+		hx-push-url="true"
+		hx-target="#data"
+		hx-select="#data"
+		hx-swap="outerHTML" 
+		hx-trigger="keyup changed delay:100ms"
+		>
+		<input
+			type="text"
+			id="mainInput"
+			name="search"
+			oninput="checkIfNumber()"
+			placeholder="Search..."
+			value={r.URL.Query().Get("search")}
+		/>
+		<script>
+			function checkIfNumber() {
+				var firstInput = document.getElementById('mainInput').value;
+				var secondInput = document.getElementById('secondaryInput');
+
+				// Check if the first input is a number
+				if (!isNaN(firstInput) && firstInput.trim() !== '') {
+				secondInput.style.display = 'block';  // Show second input
+				} else {
+				secondInput.style.display = 'none';   // Hide second input
+				}
+			}
+		</script>
+		<!-- Second input, initially hidden -->
+		{{
+			var style string
+			if _, err := strconv.ParseFloat(r.URL.Query().Get("search"), 64); err == nil {
+				style = "display: block;"
+			} else {
+				style = "display: none;"
+			}
+		}}
+
+		<input name="width" id="secondaryInput" type="text" placeholder="1" value={r.URL.Query().Get("width")} style={style}/>
+	</form>
+
+	<body>
+		<h1>Electron Binding Energies</h1>
+		<table>
+		<thead>
+			<tr>
+				<th>Element</th>
+				<th>Orbital</th>
+				<th>Energy</th>
+			</tr>
+		</thead>
+		<tbody id="data">
+			@tablecomponent
+		</tbody>
+		</table>
+	</body>
+	</html>
+}
+
+templ dataTable(data []DataRow) {
+	
+	for _, row := range data {
+		<tr>
+			<td>{row.Element}</td>
+			<td>{row.Orbital}</td>
+			<td>{fmt.Sprintf("%.2f", row.Energy)}</td>
+		</tr>
+	}
+}
+
