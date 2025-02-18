@@ -25,6 +25,11 @@ templ index(tablecomponent templ.Component, r *http.Request) {
 			}
 		</style>
 	</head>
+	<body>
+	<h1>Find relevant core levels fast.</h1>
+	<p> The data is sourced from the <a href="https://xdb.lbl.gov/Section1/Sec_1-1.html">X-Ray Data Booklet</a> by LBL. </p>
+	
+
 	<form
 		hx-boost="true"
 		action="/"
@@ -35,7 +40,7 @@ templ index(tablecomponent templ.Component, r *http.Request) {
 		hx-swap="outerHTML" 
 		hx-trigger="keyup changed delay:100ms"
 		>
-		<input
+		<p>Element symbol (He, Sn, Cu, ...) or binding energy in eV (13.6, 100, 42, ...).</p><input
 			type="text"
 			id="mainInput"
 			name="search"
@@ -51,6 +56,7 @@ templ index(tablecomponent templ.Component, r *http.Request) {
 				// Check if the first input is a number
 				if (!isNaN(firstInput) && firstInput.trim() !== '') {
 				secondInput.style.display = 'block';  // Show second input
+
 				} else {
 				secondInput.style.display = 'none';   // Hide second input
 				}
@@ -65,11 +71,12 @@ templ index(tablecomponent templ.Component, r *http.Request) {
 				style = "display: none;"
 			}
 		}}
-
-		<input name="width" id="secondaryInput" type="text" placeholder="1" value={r.URL.Query().Get("width")} style={style}/>
+		<div id="secondaryInput" style={style}>
+			<p> Width of the search in eV (1, 5, 10, ...).</p>
+			<input name="width" type="text" placeholder="1" value={r.URL.Query().Get("width")}/>
+		</div>
 	</form>
 
-	<body>
 		<h1>Electron Binding Energies</h1>
 		<table>
 		<thead>
