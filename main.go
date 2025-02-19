@@ -66,6 +66,7 @@ func main() {
 
 	r.Post("/", xpsTableHandler(data).ServeHTTP)
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		// if r has header HX-Request, then render the table component only
 		queryParams := r.URL.Query()
 		tableComponent, err := tableComponentBuilder(data, queryParams)
 		if err != nil {
@@ -73,7 +74,11 @@ func main() {
 			http.Error(w, "Failed to render template 3", http.StatusInternalServerError)
 			return
 		}
-		index(tableComponent, r).Render(r.Context(), w)
+		if r.Header.Get("HX-Request") == "true" {
+			tableComponent.Render(r.Context(), w)
+		} else {
+			index(tableComponent, r).Render(r.Context(), w)
+		}
 	})
 	http.ListenAndServe(":3000", r)
 }
