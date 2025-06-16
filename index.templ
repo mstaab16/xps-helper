@@ -19,23 +19,229 @@ templ index(tablecomponent templ.Component, r *http.Request) {
 			})
 		</script>
 		<style>
+			:root {
+				--primary-color: #2563eb;
+				--primary-dark: #1d4ed8;
+				--secondary-color: #3b82f6;
+				--background-color: #f8fafc;
+				--border-color: #e2e8f0;
+				--text-color: #1e293b;
+				--accent-color: #f59e0b;
+			}
+
+			@keyframes fadeIn {
+				from { opacity: 0; transform: translateY(10px); }
+				to { opacity: 1; transform: translateY(0); }
+			}
+
+			@keyframes gradient {
+				0% { background-position: 0% 50%; }
+				50% { background-position: 100% 50%; }
+				100% { background-position: 0% 50%; }
+			}
+
+			body {
+				font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+				line-height: 1.6;
+				color: var(--text-color);
+				background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+				margin: 0;
+				padding: 2rem;
+				max-width: 1200px;
+				margin: 0 auto;
+				min-height: 100vh;
+			}
+
+			.hero {
+				text-align: center;
+				margin-bottom: 3rem;
+				animation: fadeIn 0.8s ease-out;
+			}
+
+			h1 {
+				color: var(--text-color);
+				margin-bottom: 1rem;
+				font-size: 2.5rem;
+				font-weight: 800;
+				line-height: 1.2;
+			}
+
+			h1 strong {
+				background: linear-gradient(120deg, var(--primary-color), var(--accent-color));
+				background-size: 200% auto;
+				-webkit-background-clip: text;
+				background-clip: text;
+				color: transparent;
+				animation: gradient 3s ease infinite;
+			}
+
+			.tagline {
+				font-size: 1.2rem;
+				color: #64748b;
+				margin-bottom: 2rem;
+			}
+
+			p {
+				margin-bottom: 1rem;
+				color: #64748b;
+			}
+
+			a {
+				color: var(--primary-color);
+				text-decoration: none;
+				transition: color 0.2s;
+			}
+
+			a:hover {
+				color: var(--primary-dark);
+				text-decoration: underline;
+			}
+
+			form {
+				background: white;
+				padding: 2rem;
+				border-radius: 16px;
+				box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+				margin-bottom: 2rem;
+				max-width: 600px;
+				margin-left: auto;
+				margin-right: auto;
+				border: 1px solid var(--border-color);
+				transition: transform 0.2s, box-shadow 0.2s;
+			}
+
+			form:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+			}
+
+			input[type="text"] {
+				width: 100%;
+				padding: 1rem;
+				margin: 0.5rem 0;
+				border: 2px solid var(--border-color);
+				border-radius: 8px;
+				font-size: 1.1rem;
+				box-sizing: border-box;
+				background-color: white;
+				box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+				transition: all 0.2s;
+			}
+
+			input[type="text"]:focus {
+				outline: none;
+				border-color: var(--primary-color);
+				box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+				background-color: #fff;
+			}
+
+			input[type="text"]::placeholder {
+				color: #94a3b8;
+			}
+
+			.table-container {
+				max-height: 70vh;
+				overflow-y: auto;
+				margin-top: 2rem;
+				background: white;
+				border-radius: 16px;
+				box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+				animation: fadeIn 0.5s ease-out;
+			}
+
 			table {
 				border-collapse: collapse;
 				width: 100%;
+				background: white;
+				margin: 0;
 			}
-			th, td {
-				border: 1px solid black;
-				padding: 8px;
+
+			thead {
+				position: sticky;
+				top: 0;
+				background: var(--primary-color);
+				z-index: 1;
+			}
+
+			th {
+				background-color: var(--primary-color);
+				color: white;
+				font-weight: 600;
+				padding: 1rem;
 				text-align: left;
+				position: sticky;
+				top: 0;
 			}
-			tr:nth-child(even) {
-				background-color: #f2f2f2;
+
+			td {
+				padding: 1rem;
+				border-bottom: 1px solid var(--border-color);
+				transition: background-color 0.2s;
 			}
+
+			tr:hover td {
+				background-color: #f8fafc;
+			}
+
+			tr:last-child td {
+				border-bottom: none;
+			}
+
+			#secondaryInput {
+				margin-top: 1rem;
+				animation: fadeIn 0.3s ease-out;
+			}
+
+			/* Custom scrollbar */
+			.table-container::-webkit-scrollbar {
+				width: 8px;
+			}
+
+			.table-container::-webkit-scrollbar-track {
+				background: #f1f5f9;
+				border-radius: 4px;
+			}
+
+			.table-container::-webkit-scrollbar-thumb {
+				background: #cbd5e1;
+				border-radius: 4px;
+			}
+
+			.table-container::-webkit-scrollbar-thumb:hover {
+				background: #94a3b8;
+			}
+
+			.footer {
+				margin-top: 4rem;
+				padding: 2rem 0;
+				text-align: center;
+				color: #64748b;
+				font-size: 0.9rem;
+				border-top: 1px solid var(--border-color);
+				animation: fadeIn 0.8s ease-out;
+			}
+
+			.footer a {
+				color: var(--primary-color);
+				text-decoration: none;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				transition: all 0.2s;
+			}
+
+			.footer a:hover {
+				color: var(--primary-dark);
+				transform: translateY(-1px);
+			}
+
 		</style>
 	</head>
 	<body>
-	<h1>Find relevant core levels fast.</h1>
-	<p> The data is sourced from the <a href="https://xdb.lbl.gov/Section1/Sec_1-1.html">X-Ray Data Booklet</a> by LBL. </p>
+		<div class="hero">
+			<h1>Search for core levels - <strong>blazingly fast</strong></h1>
+			<p class="tagline">The data is sourced from the <a href="https://xdb.lbl.gov/Section1/Sec_1-1.html">X-Ray Data Booklet</a> by LBL.</p>
+		</div>
 	
 
 	<form
@@ -44,7 +250,7 @@ templ index(tablecomponent templ.Component, r *http.Request) {
 		method="get"
 		hx-push-url="true"
 		hx-target="#data"
-		hx-swap="innerHTML" 
+		hx-swap="innerHTML scroll:false"
 		hx-trigger="keyup changed delay:100ms"
 		>
 		<p>Element symbol (He, Sn, Cu, ...) or binding energy in eV (13.6, 100, 42, ...).</p><input
@@ -54,6 +260,7 @@ templ index(tablecomponent templ.Component, r *http.Request) {
 			oninput="checkIfNumber()"
 			placeholder="Search..."
 			value={r.URL.Query().Get("search")}
+			autofocus
 		/>
 		<script>
 			function checkIfNumber() {
@@ -85,18 +292,24 @@ templ index(tablecomponent templ.Component, r *http.Request) {
 	</form>
 
 		<h1>Electron Binding Energies</h1>
-		<table>
-		<thead>
-			<tr>
-				<th>Element</th>
-				<th>Orbital</th>
-				<th>Energy</th>
-			</tr>
-		</thead>
-		<tbody id="data">
-			@tablecomponent
-		</tbody>
-		</table>
+		<div class="table-container">
+			<table>
+				<thead>
+					<tr>
+						<th>Element</th>
+						<th>Atomic Number</th>
+						<th>Orbital</th>
+						<th>Energy</th>
+					</tr>
+				</thead>
+				<tbody id="data">
+					@tablecomponent
+				</tbody>
+			</table>
+		</div>
+		<footer class="footer">
+			Created by <a href="https://github.com/mstaab16" target="_blank" rel="noopener noreferrer">Matthew Staab</a>
+		</footer>
 	</body>
 	</html>
 }
@@ -106,6 +319,7 @@ templ dataTable(data []DataRow) {
 	for _, row := range data {
 		<tr>
 			<td>{row.Element}</td>
+			<td>{fmt.Sprintf("%d", row.Number)}</td>
 			<td>{row.Orbital}</td>
 			<td>{fmt.Sprintf("%.2f", row.Energy)}</td>
 		</tr>

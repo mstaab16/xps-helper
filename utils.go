@@ -65,7 +65,7 @@ func filterByEnergy(data []DataRow, minEnergy, maxEnergy float64) []DataRow {
 func filterByElement(data []DataRow, name string) []DataRow {
 	var result []DataRow
 	for _, row := range data {
-		if row.Element == name {
+		if strings.ToLower(row.Element) == strings.ToLower(name) {
 			result = append(result, row)
 		}
 	}
