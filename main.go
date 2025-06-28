@@ -20,7 +20,7 @@ func tableComponentBuilder(data []DataRow, queryParams url.Values) (templ.Compon
 	var filtered_data []DataRow
 	search := queryParams.Get("search")
 	width_str := queryParams.Get("width")
-	if isAlpha(search) {
+	if isElementSearch(search) {
 		filtered_data = filterByElement(data, search)
 	} else {
 		energy, err := strconv.ParseFloat(strings.TrimSpace(search), 64)

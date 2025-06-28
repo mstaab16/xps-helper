@@ -62,10 +62,38 @@ func filterByEnergy(data []DataRow, minEnergy, maxEnergy float64) []DataRow {
 	return result
 }
 
+// parseElementNames splits a string by commas and spaces, trims whitespace, and returns a slice of element names
+func parseElementNames(input string) []string {
+	// First split by commas
+	commaParts := strings.Split(input, ",")
+	var elements []string
+	
+	for _, part := range commaParts {
+		// Then split each comma part by spaces
+		spaceParts := strings.Fields(strings.TrimSpace(part))
+		for _, element := range spaceParts {
+			element = strings.TrimSpace(element)
+			if element != "" {
+				elements = append(elements, element)
+			}
+		}
+	}
+	
+	return elements
+}
+
 func filterByElement(data []DataRow, name string) []DataRow {
 	var result []DataRow
+	elements := parseElementNames(name)
+	
+	// Convert element names to lowercase for case-insensitive comparison
+	elementMap := make(map[string]bool)
+	for _, element := range elements {
+		elementMap[strings.ToLower(element)] = true
+	}
+	
 	for _, row := range data {
-		if strings.ToLower(row.Element) == strings.ToLower(name) {
+		if elementMap[strings.ToLower(row.Element)] {
 			result = append(result, row)
 		}
 	}
@@ -81,6 +109,31 @@ func isAlpha(s string) bool {
 	}
 	return len(s) > 0 // Ensures the string is not empty
 }
+
+// isElementSearch checks if a search query is for elements (contains letters, spaces, commas)
+// vs energy (should be a single number)
+func isElementSearch(s string) bool {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return false
+	}
+	
+	// If it contains any letters, it's an element search
+	for _, r := range s {
+		if unicode.IsLetter(r) {
+			return true
+		}
+	}
+	
+	// If it contains spaces or commas, it's likely an element search
+	if strings.Contains(s, " ") || strings.Contains(s, ",") {
+		return true
+	}
+	
+	// Otherwise, it's probably an energy search (single number)
+	return false
+}
+
 func parseFloatQuery(input string) (float64, float64, error) {
 	parts := strings.Split(input, ",")
 	if len(parts) != 2 {
